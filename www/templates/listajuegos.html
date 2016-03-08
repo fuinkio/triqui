@@ -1,0 +1,26 @@
+<ion-view view-title="cortesias">
+  <ion-content>
+
+
+    <ion-list>
+      <ion-item ng-repeat="usuario in usuarios" >
+   <div ng-click="irausuario({{usuario.tbl_persona_id}})">
+
+    <a class="item item-thumbnail-left" href="#" >
+      
+      <h2> {{usuario.tbl_persona_nombre}}</h2>
+      <p>Correo: {{usuario.tbl_persona_correo}}</p>
+      <p>Telefono: {{usuario.tbl_persona_telefono}}</p>
+      <p>Direccion: {{usuario.tbl_persona_direccion}}</p>
+    </a>
+
+    
+
+</div>
+
+      </ion-item>
+      
+
+    </ion-list>
+  </ion-content>
+</ion-view>

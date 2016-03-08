@@ -1,0 +1,22 @@
+<ion-view view-title="registrar usuario">
+  <ion-content>
+  
+
+    <ion-list>
+
+    <div class="list list-inset"   class="wrapper">
+  
+  <label class="item item-input">
+    <input type="text" placeholder="correo" ng-model="$parent.nuevousuario.correo">
+  </label>
+    <label class="item item-input">
+    <input type="password" placeholder="contraseña" ng-model="$parent.nuevousuario.pass">
+  </label>
+  
+<button class="button button-block button-positive" ng-click="llamarRegistrarme()">
+  Registrarme
+</button>
+</div>
+    </ion-list>
+  </ion-content>
+</ion-view>
