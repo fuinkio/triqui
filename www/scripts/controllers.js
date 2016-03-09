@@ -39,7 +39,7 @@ angular.module('starter.controllers', [])
   };
 
   // Perform the login action when the user submits the login form
-   $scope.doLogin = function() {
+  $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
 
     // Simulate a login delay. Remove this and replace with your login
@@ -180,10 +180,12 @@ angular.module('starter.controllers', [])
   }
 
 })
-.controller('nuevojuegoCtrl', function($scope,$rootScope,$q,$http) {
+.controller('nuevojuegoCtrl', function($scope,$rootScope,$q,$http,$timeout) {
+  localStorage.setItem("currentPlayer",'O');
+  setPlayer();
+  $scope.player = localStorage.getItem("Player");
+  $scope.currentPlayer = localStorage.getItem("currentPlayer");
 
-  $scope.player = setPlayer();
-  $scope.currentPlayer = 'O';
   $scope.ganador;
   $scope.winner = null;
   $scope.board = [
@@ -202,7 +204,18 @@ angular.module('starter.controllers', [])
       
       return value;
     }
+    function getBoardIdService(){
+      try {
+        var q = $q.defer();
+        $http.get($rootScope.baseURL+"9&player="+localStorage.getItem("id")).success(function(data){
+          q.resolve(data);
+        });
+        return q.promise;
 
+      }
+      catch(err) {
+      }
+    };
     $scope.crearPartidaService = function(){
      try {
       var q = $q.defer();
@@ -216,31 +229,62 @@ angular.module('starter.controllers', [])
     }
     return true;
   };
-    $scope.crearPartida= function(){
-      $scope.partidaNueva = $scope.crearPartidaService();
-      $scope.partidaNueva.then(function(val){
+  $scope.crearPartida= function(){
+    $scope.partidaNueva = $scope.crearPartidaService();
+    $scope.partidaNueva.then(function(val){
       //se almacena board en local storage, se redirije a juego
       console.log(JSON.stringify(val));
+
       // localStorage.setItem("board",val.tbl_board_id);
       // localStorage.setItem("enJuego", 1);
       // $location.path('/app/nuevojuego');
     });
-    };
+  };
 
 
-  if (localStorage.getItem("enJuego")==0) {
-      console.log("creando Juego nuevo");
-      $scope.partida = $scope.crearPartida();
-    }
+  if (localStorage.getItem("enJuego") == 0) {
+    console.log("creando Juego nuevo");
+
+    $scope.partida = $scope.crearPartida();
+    getBoardIdService().then(function(data){
+
+      console.log(JSON.stringify(data));
+      var tableId = data[data.length-1].tbl_board_id;
+      console.log("Board id "+ tableId);
+      localStorage.setItem("board",tableId);
+
+    });
+  }
+  function getPlayerOne(){
+    getBoardIdService().then(function(data){
+        //asumiendo que en el last esta el que sigue
+        var tableId = data[data.length-1].tbl_board_player1;
+        localStorage.setItem("PlayerOne",tableId);
+        console.log("player 1 is"+ tableId);
+        console.log("my id is" + localStorage.getItem("id"));
+      });
+  };
   function setPlayer(){
       //se llama desde antes del new game o cuando viene de encontrar partida
-      if(!localStorage.getItem("board")){
-        $scope.player = 'O';
-      }else{
-        $scope.player = 'X';
+      getBoardIdService().then(function(data){
+        //asumiendo que en el last esta el que sigue
+        var tableId = data[data.length-1].tbl_board_player1;
+        localStorage.setItem("PlayerOne",tableId);
+        console.log("player 1 is "+ tableId);
+        console.log("my id is " + localStorage.getItem("id"));
+        var p1 = localStorage.getItem("PlayerOne") * 1;
+        var myid = localStorage.getItem("id") * 1;
+        if( p1 == myid){
+          $scope.player = 'O';
+          console.log("si es igual!");
+        }else{
+          $scope.player = 'X';
+          console.log("no es igual!");
+        }
         localStorage.setItem("Player", $scope.player);
-      }
-      return $scope.player;
+        return $scope.player;
+      });
+
     }
     posToMatrix = function (position){
       var pos=[0,0];      
@@ -269,11 +313,28 @@ angular.module('starter.controllers', [])
         $scope.currentPlayer='O';
       } 
     }
+
+    getCurrent = function(){
+      getBoardIdService().then(function(data){
+        //asumiendo que en el last esta el que sigue
+        var tableId = data[data.length-1].tbl_board_last;
+        console.log("current player "+ tableId);
+        localStorage.setItem("currentPlayer",tableId);
+
+      });
+    }
+
+
     setPos = function(row,col,position){
       $scope.board[row][col]=$scope.player;
-      setPosService(position);
+      $scope.setPosService(position)
+      .then(function(data){
+        console.log(JSON.stringify(data));
+      });
+      getCurrent();
       switchPlayer();
     }
+
     $scope.testPos = function(position){
       if($scope.player == $scope.currentPlayer){ 
         var row = posToMatrix(position)[0];
@@ -291,7 +352,7 @@ angular.module('starter.controllers', [])
 
       try {
         var q = $q.defer();
-        $http.get($rootScope.baseURL+"5&player="+localStorage.getItem("id")+"&position="+position+"&board=").success(function(data){
+        $http.get($rootScope.baseURL+"5&player="+localStorage.getItem("id")+"&position="+position+"&board="+localStorage.getItem("board")).success(function(data){
           q.resolve(data);
         });
         return q.promise;
