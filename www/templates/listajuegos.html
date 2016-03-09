@@ -1,26 +1,20 @@
-<ion-view view-title="cortesias">
-  <ion-content>
+<ion-view view-title="Juegos disponibles">
+<ion-content>
 
 
-    <ion-list>
-      <ion-item ng-repeat="usuario in usuarios" >
-   <div ng-click="irausuario({{usuario.tbl_persona_id}})">
+<ion-list>
+<ion-item ng-repeat="juego in juegos" >
+<div ng-click="unirseApartida({{juego.tbl_board_id}})">
 
-    <a class="item item-thumbnail-left" href="#" >
-      
-      <h2> {{usuario.tbl_persona_nombre}}</h2>
-      <p>Correo: {{usuario.tbl_persona_correo}}</p>
-      <p>Telefono: {{usuario.tbl_persona_telefono}}</p>
-      <p>Direccion: {{usuario.tbl_persona_direccion}}</p>
-    </a>
+  <a class="item" href="#" >
 
-    
-
+    <h2>Juego: {{juego.tbl_board_id}}</h2>
+    <p>Oponente: {{juego.tbl_board_player1}}</p>
+  </a>
 </div>
+</ion-item>
 
-      </ion-item>
-      
 
-    </ion-list>
-  </ion-content>
+</ion-list>
+</ion-content>
 </ion-view>

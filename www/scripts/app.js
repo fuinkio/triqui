@@ -75,7 +75,7 @@ angular.module('starter', ['ionic', 'starter.controllers','angular-md5','ionic-d
 .state('app.listajuegos', {
       url: "/listajuegos",
       data: {
-        requireLogin: true
+        requireLogin: false
       },
       views: {
         'menuContent': {
@@ -84,11 +84,10 @@ angular.module('starter', ['ionic', 'starter.controllers','angular-md5','ionic-d
         }
       }
     })
-
 .state('app.nuevojuego', {
       url: "/nuevojuego",
       data: {
-        requireLogin: true
+        requireLogin: false
       },
       views: {
         'menuContent': {

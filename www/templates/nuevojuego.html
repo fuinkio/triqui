@@ -1,47 +1,30 @@
-<ion-view view-title="usuarios">
-  <ion-content>
-  <ion-refresher
-    pulling-text="Hala para recargar..."
-    on-refresh="buscar()">
-  </ion-refresher>
+<ion-view view-title="Juego">
+<style type="text/css">
+table.cell {    
+  width: 100px;
+    height: 100px;
+    font: 90px sans-serif;
+    text-align: center;
+    vertical-align: center;
+}
+</style>
+<center>
+  <ion-content class="padding">
+      <table border="2" class="cell">
+        <tr ng-repeat="row in [0,1,2]">
+            <td ng-repeat="column in [0,1,2]">{{cellText(row,column)}}</td>
+        </tr>
+    </table>
+    <br>
+    <h4>Tu signo:{{player}}</h4>
+    <h4>Turno:{{currentPlayer}}</h4>
+    {{ganador}}
+    <br>
+    <form>
+      <input type"int" ng-model="posicion">
+      <button type="submit" ng-click="testPos(posicion)">Enviar</button>
+    </form>
+    </center>
 
-    <ion-list>
-   
-    <div>
-      <a class="item item-thumbnail" href="#" >
-      
-      <center>
-    <label class="item item-input">
-    <input type="text" placeholder="nombre" ng-model="uf" >
-  </label>
-  <br>
-  <button class="button button-positive" ng-click="buscarusuario(uf)">
-  Buscar usuario
-</button>
-</center>
-    </a>
-      
-  </div>
-      <ion-item ng-repeat="usuario in usuarios" >
-   <div ng-click="irausuario({{usuario.tbl_persona_id}})">
-
-    <a class="item item-thumbnail-left" href="#" >
-      
-      <h2> {{usuario.tbl_persona_nombre}}</h2>
-      <p ng-hide="usuario.tbl_persona_correo=='undefined'">Correo: {{usuario.tbl_persona_correo}}</p>
-      <p ng-show="usuario.tbl_persona_correo=='undefined'">Correo: no disponible</p>
-      <p>Telefono: {{usuario.tbl_persona_telefono}}</p>
-      <p>Talla trusa: {{usuario.tbl_persona_talla}}</p>
-      <p>Direccion: {{usuario.tbl_persona_direccion}}</p>
-    </a>
-
-    
-
-</div>
-
-      </ion-item>
-      
-
-    </ion-list>
   </ion-content>
 </ion-view>
